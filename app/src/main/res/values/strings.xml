@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">PATM_Mapas17A</string>
+    <string name="title_activity_mapas">Map</string>
+    <string name="strVistaNormal">Vista Normal</string>
+    <string name="strVistaSatelite">Vista Satelital</string>
+    <string name="strVistaHibrida">Vista Híbrida</string>
+    <string name="strVistaTerreno">Vista de Relieve</string>
+</resources>
