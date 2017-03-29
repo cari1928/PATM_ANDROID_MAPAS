@@ -20,4 +20,9 @@
         android:id="@+id/itmTerreno"
         android:title="@string/strVistaTerreno"
         app:showAsAction="never"></item>
+
+    <item
+        android:id="@+id/map_lugares"
+        android:title="Lugares Cercanos"
+        app:showAsAction="never" ></item>
 </menu>

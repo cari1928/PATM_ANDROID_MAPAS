@@ -1,18 +1,16 @@
 package com.example.radog.patm_mapas17a;
 
-import android.location.Location;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -24,6 +22,7 @@ public class Mapas extends AppCompatActivity implements OnMapReadyCallback, Goog
     private GoogleMap mMap;
     private Marker marcador = null;
     double latMarca, lonMarca;
+    private Obtener_Lugares objOL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +56,13 @@ public class Mapas extends AppCompatActivity implements OnMapReadyCallback, Goog
                 break;
             case R.id.itmTerreno:
                 mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                break;
+            case R.id.map_lugares:
+                //obtener lugares
+                objOL = new Obtener_Lugares(this, mMap);
+                objOL.getNokia(latMarca, lonMarca);
+                objOL.agregarMarcadores();
+                //podría hacer atributos en la clase Obtener_Lugares y obtenerlos desde aquí
         }
         return super.onOptionsItemSelected(item);
     }
@@ -78,15 +84,26 @@ public class Mapas extends AppCompatActivity implements OnMapReadyCallback, Goog
         mMap.setOnMapClickListener(this);
         Geolocalizacion objGeo = new Geolocalizacion(this);
 
+        //obtiene posición actual
         latitud = objGeo.getLatActual();
         longitud = objGeo.getLongActual();
 
+        //conocer latitud y longitud
+        //Toast.makeText(this, "latitud: " + latitud + " longitud: " + longitud, Toast.LENGTH_SHORT).show();
+
         LatLng aquiEstoy = new LatLng(latitud, longitud);
+
+        /*
+        api google web service
+        Obtiene la ubicación en base a latitud y longitud obtenidas del GPS
+        */
+        Geocode objG = new Geocode(this, mMap, aquiEstoy);
+        objG.getPlaces(latitud, longitud);
 
         // Add a marker in Sydney and move the camera
         //LatLng itc = new LatLng(24.541634, -100.812420);
-        mMap.addMarker(new MarkerOptions().position(aquiEstoy).title("Aqui reprobando gente!!!"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(aquiEstoy));
+        //mMap.addMarker(new MarkerOptions().position(aquiEstoy).title("Aqui reprobando gente!!!"));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(aquiEstoy));
     }
 
     @Override
@@ -94,6 +111,9 @@ public class Mapas extends AppCompatActivity implements OnMapReadyCallback, Goog
         latMarca = latLng.latitude;
         lonMarca = latLng.longitude;
         setMarca();
+
+        objOL = new Obtener_Lugares(this, mMap);
+        objOL.getNokia(latMarca, lonMarca);
     }
 
     private void setMarca() {
@@ -102,7 +122,7 @@ public class Mapas extends AppCompatActivity implements OnMapReadyCallback, Goog
         CameraUpdate camUpd = CameraUpdateFactory.newCameraPosition(camara);
         mMap.animateCamera(camUpd);
 
-        if(marcador != null) {
+        if (marcador != null) {
             marcador.remove();
         }
 
