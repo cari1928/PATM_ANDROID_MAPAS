@@ -37,8 +37,6 @@ public class Obtener_Lugares implements Response.Listener<String>, Response.Erro
     private Marker marcas[];
     private GoogleMap mapa;
 
-    private ProgressDialog dialogo;
-    private String respStr;
     private JSONArray lugares;
     private JSONObject results, item, lugar;
     private RequestQueue qSolicitudes;
@@ -52,7 +50,8 @@ public class Obtener_Lugares implements Response.Listener<String>, Response.Erro
     public void getNokia(double latmarca, double lonmarca) {
         qSolicitudes = Volley.newRequestQueue(con);
 
-        String URL = "http://demo.places.nlp.nokia.com/places/v1/discover/explore?at=" + latmarca + "," + lonmarca + "&app_id=DemoAppId01082013GAL&app_code=AJKnXv84fjrb0KIHawS0Tg&tf=plain&pretty=true";
+        String URL = "http://demo.places.nlp.nokia.com/places/v1/discover/explore?at="
+                + latmarca + "," + lonmarca + "&app_id=DemoAppId01082013GAL&app_code=AJKnXv84fjrb0KIHawS0Tg&tf=plain&pretty=true";
 
         StringRequest solGETCte = new StringRequest(Request.Method.GET, URL, this, this) {
             @Override
@@ -82,17 +81,19 @@ public class Obtener_Lugares implements Response.Listener<String>, Response.Erro
             marcas = new Marker[lugares.length()];
 
             for (int i = 0; i < lugares.length(); i++) {
-            lugar = lugares.getJSONObject(i);
+                lugar = lugares.getJSONObject(i);
 
                 String p = lugar.getString("title");
                 String urlIcon = lugar.getString("icon");
                 Bitmap bmImg = Ion.with(con).load(urlIcon).asBitmap().get();
 
                 marcas[i] = mapa.addMarker(new MarkerOptions()
-                        .position(new LatLng(lugar.getJSONArray("position").getDouble(0), lugar.getJSONArray("position").getDouble(1)))
+                        .position(new LatLng(
+                                lugar.getJSONArray("position").getDouble(0),
+                                lugar.getJSONArray("position").getDouble(1)))
                         .title(lugar.getString("title"))
                         .icon(BitmapDescriptorFactory.fromBitmap(bmImg)));
-                        //.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+                //.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
             }
 
             marcas = new Marker[lugares.length()];
@@ -103,10 +104,12 @@ public class Obtener_Lugares implements Response.Listener<String>, Response.Erro
                     Bitmap bmImg = Ion.with(con).load(lugar.getString("icon")).asBitmap().get();
 
                     marcas[i] = mapa.addMarker(new MarkerOptions()
-                            .position(new LatLng(lugar.getJSONArray("position").getDouble(0), lugar.getJSONArray("position").getDouble(1)))
+                            .position(new LatLng(
+                                    lugar.getJSONArray("position").getDouble(0),
+                                    lugar.getJSONArray("position").getDouble(1)))
                             .title(lugar.getString("title"))
                             .icon(BitmapDescriptorFactory.fromBitmap(bmImg)));
-                            //.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+                    //.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
 
                 } catch (JSONException e) {
                     e.printStackTrace();

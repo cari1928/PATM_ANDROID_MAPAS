@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -95,7 +93,7 @@ public class Mapas extends AppCompatActivity implements OnMapReadyCallback, Goog
         Obtiene la ubicación en base a latitud y longitud obtenidas del GPS
         */
         Geocode objG = new Geocode(this, mMap, aquiEstoy);
-        objG.getPlaces(latitud, longitud);
+        objG.getPlace(latitud, longitud);
 
         // Add a marker in Sydney and move the camera
         //LatLng itc = new LatLng(24.541634, -100.812420);

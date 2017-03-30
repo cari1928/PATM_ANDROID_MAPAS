@@ -39,10 +39,11 @@ public class Geocode implements Response.Listener<String>, Response.ErrorListene
         ubicacionActual = "";
     }
 
-    public void getPlaces(double lat, double lon) {
+    public void getPlace(double lat, double lon) {
         qSolicitudes = Volley.newRequestQueue(con);
         //String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&key=AIzaSyCrH5aKpoAJ3oBK48YRA0QJYBe_2FC0jJA";
-        String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lon + "&key=AIzaSyAg8JGCUKDz1XyDzSe7dF0VNKglIIGB7jc";
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="
+                + lat + "," + lon + "&key=AIzaSyAg8JGCUKDz1XyDzSe7dF0VNKglIIGB7jc";
 
         StringRequest solGETCte = new StringRequest(Request.Method.GET, url, this, this) {
             @Override
@@ -76,8 +77,5 @@ public class Geocode implements Response.Listener<String>, Response.ErrorListene
             e.printStackTrace();
         }
     }
-
-    public String getUbicacionActual() {
-        return ubicacionActual;
-    }
+    
 }
