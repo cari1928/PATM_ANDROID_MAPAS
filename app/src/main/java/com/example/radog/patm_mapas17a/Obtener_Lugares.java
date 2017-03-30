@@ -2,8 +2,8 @@ package com.example.radog.patm_mapas17a;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Base64;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -17,6 +17,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.koushikdutta.ion.Ion;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,6 +72,8 @@ public class Obtener_Lugares implements Response.Listener<String>, Response.Erro
 
     @Override
     public void onResponse(String response) {
+        //Toast.makeText(con, response, Toast.LENGTH_SHORT).show();
+
         try {
             results = new JSONObject(response);
             item = results.getJSONObject("results");
@@ -77,24 +82,35 @@ public class Obtener_Lugares implements Response.Listener<String>, Response.Erro
             marcas = new Marker[lugares.length()];
 
             for (int i = 0; i < lugares.length(); i++) {
+            lugar = lugares.getJSONObject(i);
 
-                lugar = lugares.getJSONObject(i);
+                String p = lugar.getString("title");
+                String urlIcon = lugar.getString("icon");
+                Bitmap bmImg = Ion.with(con).load(urlIcon).asBitmap().get();
+
                 marcas[i] = mapa.addMarker(new MarkerOptions()
                         .position(new LatLng(lugar.getJSONArray("position").getDouble(0), lugar.getJSONArray("position").getDouble(1)))
                         .title(lugar.getString("title"))
-                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+                        .icon(BitmapDescriptorFactory.fromBitmap(bmImg)));
+                        //.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
             }
 
             marcas = new Marker[lugares.length()];
             for (int i = 0; i < lugares.length(); i++) {
                 try {
                     lugar = lugares.getJSONObject(i);
+
+                    Bitmap bmImg = Ion.with(con).load(lugar.getString("icon")).asBitmap().get();
+
                     marcas[i] = mapa.addMarker(new MarkerOptions()
                             .position(new LatLng(lugar.getJSONArray("position").getDouble(0), lugar.getJSONArray("position").getDouble(1)))
                             .title(lugar.getString("title"))
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+                            .icon(BitmapDescriptorFactory.fromBitmap(bmImg)));
+                            //.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Toast.makeText(con, e.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         } catch (Exception e) {
@@ -102,37 +118,8 @@ public class Obtener_Lugares implements Response.Listener<String>, Response.Erro
         }
     }
 
-    /*@Override
-    protected Void doInBackground(String... params) {
-        return null;
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        dialogo = new ProgressDialog(con);
-        dialogo.setMessage("CARGANDO LUGARES... ");
-        dialogo.show();
-    }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        if (marcas.length > 0) {
-            borrarMarcadores();
-            agregarMarcadores();
-        } else {
-            agregarMarcadores();
-        }
-        dialogo.dismiss();
-    }*/
-
     private void borrarMarcadores() {
         for (int i = 0; i < marcas.length; i++)
             marcas[i].remove();
-    }
-
-    public void agregarMarcadores() {
-
     }
 }

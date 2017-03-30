@@ -58,11 +58,8 @@ public class Mapas extends AppCompatActivity implements OnMapReadyCallback, Goog
                 mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
                 break;
             case R.id.map_lugares:
-                //obtener lugares
                 objOL = new Obtener_Lugares(this, mMap);
                 objOL.getNokia(latMarca, lonMarca);
-                objOL.agregarMarcadores();
-                //podría hacer atributos en la clase Obtener_Lugares y obtenerlos desde aquí
         }
         return super.onOptionsItemSelected(item);
     }
@@ -112,6 +109,8 @@ public class Mapas extends AppCompatActivity implements OnMapReadyCallback, Goog
         lonMarca = latLng.longitude;
         setMarca();
 
+        //Toast.makeText(this, latMarca + " " + lonMarca, Toast.LENGTH_SHORT).show();
+
         objOL = new Obtener_Lugares(this, mMap);
         objOL.getNokia(latMarca, lonMarca);
     }
@@ -126,6 +125,6 @@ public class Mapas extends AppCompatActivity implements OnMapReadyCallback, Goog
             marcador.remove();
         }
 
-        marcador = mMap.addMarker(new MarkerOptions().position(coordenada).title("Posición X").icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
+        marcador = mMap.addMarker(new MarkerOptions().position(coordenada).title("Posición X").icon(BitmapDescriptorFactory.fromResource(R.mipmap.location)));
     }
 }
