@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -15,12 +16,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Mapas extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private GoogleMap mMap;
     private Marker marcador = null;
     double latMarca, lonMarca;
     private Obtener_Lugares objOL;
+    private List<Marker> marcas = new ArrayList<>();
+    ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +37,8 @@ public class Mapas extends AppCompatActivity implements OnMapReadyCallback, Goog
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        marcas = new ArrayList<>();
     }
 
     @Override
@@ -56,7 +64,7 @@ public class Mapas extends AppCompatActivity implements OnMapReadyCallback, Goog
                 mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
                 break;
             case R.id.map_lugares:
-                objOL = new Obtener_Lugares(this, mMap);
+                objOL = new Obtener_Lugares(this, mMap, marcas);
                 objOL.getNokia(latMarca, lonMarca);
         }
         return super.onOptionsItemSelected(item);
@@ -109,7 +117,7 @@ public class Mapas extends AppCompatActivity implements OnMapReadyCallback, Goog
 
         //Toast.makeText(this, latMarca + " " + lonMarca, Toast.LENGTH_SHORT).show();
 
-        objOL = new Obtener_Lugares(this, mMap);
+        objOL = new Obtener_Lugares(this, mMap, marcas);
         objOL.getNokia(latMarca, lonMarca);
     }
 

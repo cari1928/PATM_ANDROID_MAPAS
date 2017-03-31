@@ -25,7 +25,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,10 +43,12 @@ public class Obtener_Lugares implements Response.Listener<String>, Response.Erro
     private JSONObject results, item, lugar;
     private RequestQueue qSolicitudes;
     private Context con;
+    private List<Marker> marcas2;
 
-    public Obtener_Lugares(Context con, GoogleMap mapa) {
+    public Obtener_Lugares(Context con, GoogleMap mapa, List<Marker> marcas2) {
         this.con = con;
         this.mapa = mapa;
+        this.marcas2 = marcas2;
     }
 
     public void getNokia(double latmarca, double lonmarca) {
@@ -74,19 +78,27 @@ public class Obtener_Lugares implements Response.Listener<String>, Response.Erro
         //Toast.makeText(con, response, Toast.LENGTH_SHORT).show();
 
         try {
+            int tamaño = marcas2.size();
+            if (tamaño != 0) {
+                //marcas2 = new ArrayList<>();
+                for (int i = 0; i < tamaño; i++)
+                  marcas2.get(i).remove();
+            }
+
             results = new JSONObject(response);
             item = results.getJSONObject("results");
             lugares = item.getJSONArray("items");
 
-            marcas = new Marker[lugares.length()];
+            //ya no importaría mucho
+            /*marcas = new Marker[lugares.length()];
 
             for (int i = 0; i < lugares.length(); i++) {
                 lugar = lugares.getJSONObject(i);
 
-                String p = lugar.getString("title");
                 String urlIcon = lugar.getString("icon");
                 Bitmap bmImg = Ion.with(con).load(urlIcon).asBitmap().get();
 
+                //ya no importa tanto
                 marcas[i] = mapa.addMarker(new MarkerOptions()
                         .position(new LatLng(
                                 lugar.getJSONArray("position").getDouble(0),
@@ -95,29 +107,31 @@ public class Obtener_Lugares implements Response.Listener<String>, Response.Erro
                         .icon(BitmapDescriptorFactory.fromBitmap(bmImg)));
                 //.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
             }
+            marcas = new Marker[lugares.length()];*/
 
-            marcas = new Marker[lugares.length()];
             for (int i = 0; i < lugares.length(); i++) {
-                try {
-                    lugar = lugares.getJSONObject(i);
+                lugar = lugares.getJSONObject(i);
 
-                    Bitmap bmImg = Ion.with(con).load(lugar.getString("icon")).asBitmap().get();
+                Bitmap bmImg = Ion.with(con).load(lugar.getString("icon")).asBitmap().get();
 
-                    marcas[i] = mapa.addMarker(new MarkerOptions()
+                marcas2.add(mapa.addMarker(new MarkerOptions()
+                        .position(new LatLng(
+                                lugar.getJSONArray("position").getDouble(0),
+                                lugar.getJSONArray("position").getDouble(1)))
+                        .title(lugar.getString("title"))
+                        .icon(BitmapDescriptorFactory.fromBitmap(bmImg))));
+
+                    /*marcas[i] = mapa.addMarker(new MarkerOptions()
                             .position(new LatLng(
                                     lugar.getJSONArray("position").getDouble(0),
                                     lugar.getJSONArray("position").getDouble(1)))
                             .title(lugar.getString("title"))
-                            .icon(BitmapDescriptorFactory.fromBitmap(bmImg)));
-                    //.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Toast.makeText(con, e.toString(), Toast.LENGTH_SHORT).show();
-                }
+                            .icon(BitmapDescriptorFactory.fromBitmap(bmImg)));*/
+                //.icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher)));
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(con, e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
